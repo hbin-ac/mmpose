@@ -2,6 +2,7 @@ import os.path as osp
 from math import inf
 
 import mmcv
+import torch
 from mmcv.runner import Hook
 from torch.utils.data import DataLoader
 
@@ -43,7 +44,9 @@ class EvalHook(Hook):
                  key_indicator='mAP',
                  rule=None,
                  **eval_kwargs):
-        if not isinstance(dataloader, DataLoader):
+        if not (isinstance(dataloader, DataLoader)
+                or isinstance(dataloader,
+                              (DataLoader, torch.utils.data.DataLoader))):
             raise TypeError(f'dataloader must be a pytorch DataLoader, '
                             f'but got {type(dataloader)}')
         if save_best and not key_indicator:
